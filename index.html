@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taschenrechner – Aurora Development</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: #0b0b14;
+    color: #cdd6f4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(137, 180, 250, 0.12) 0%, transparent 70%);
+    top: -150px;
+    right: -100px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(203, 166, 247, 0.08) 0%, transparent 70%);
+    bottom: -150px;
+    left: -100px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card {
+    background: rgba(24, 24, 37, 0.65);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 28px;
+    padding: 3.5rem 2.5rem;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #b4befe, #89b4fa);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 12px 32px rgba(137, 180, 250, 0.3);
+    color: #11111b;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #ffffff 40%, #a6adc8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.35rem;
+    text-align: center;
+  }
+
+  .sub {
+    color: #6c7086;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .version-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    background: rgba(17, 17, 27, 0.5);
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .version-badge {
+    color: #89b4fa;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    background: #45475a;
+    border-radius: 50%;
+  }
+
+  .update-status {
+    font-size: 0.8rem;
+    color: #9399b2;
+    font-weight: 500;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: #ffffff;
+    color: #11111b;
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+    margin-bottom: 2.5rem;
+    width: 100%;
+  }
+
+  .btn:hover {
+    background: #89b4fa;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(137, 180, 250, 0.35);
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 2.5rem;
+  }
+
+  .features span {
+    background: rgba(30, 30, 46, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    color: #bac2de;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .features span:hover {
+    background: rgba(49, 50, 68, 0.5);
+    color: #cdd6f4;
+  }
+
+  .features span::before {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: #89b4fa;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 1.5rem;
+    width: 100%;
+  }
+
+  .links a {
+    color: #7f849c;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.15s;
+  }
+
+  .links a:hover { color: #89b4fa; }
+
+  .footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #585b70;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .footer a { color: #7f849c; text-decoration: none; font-weight: 500; }
+  .footer a:hover { color: #89b4fa; }
+
+  @media (max-width: 480px) {
+    .card { padding: 2.5rem 1.5rem; }
+    .features { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="icon-wrapper">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="3"/>
+      <line x1="8" y1="6" x2="8" y2="6.01"/>
+      <line x1="8" y1="10" x2="8" y2="10.01"/>
+      <line x1="8" y1="14" x2="8" y2="14.01"/>
+      <line x1="12" y1="6" x2="16" y2="6"/>
+      <line x1="12" y1="10" x2="16" y2="10"/>
+      <line x1="12" y1="14" x2="16" y2="14"/>
+      <line x1="8" y1="18" x2="16" y2="18"/>
+    </svg>
+  </div>
+  <h1>Taschenrechner</h1>
+  <p class="sub">Aurora Development</p>
+
+  <div class="version-row">
+    <span class="version-badge" id="version">v1.2</span>
+    <span class="dot"></span>
+    <span class="update-status" id="updateStatus">Checking update...</span>
+  </div>
+
+  <a class="btn" href="https://github.com/AnimaDev24/CalculatorPy/releases/download/v1.2/Taschenrechner_v1.2_Setup.exe" target="_blank">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download for Windows
+  </a>
+
+  <div class="features">
+    <span>Basic Operations</span>
+    <span>Square Root & Power</span>
+    <span>German Number Format</span>
+    <span>Custom Title Bar</span>
+    <span>Keyboard Support</span>
+    <span>Auto-Update Check</span>
+  </div>
+
+  <div class="links">
+    <a href="https://github.com/AnimaDev24/CalculatorPy" target="_blank">GitHub</a>
+    <a href="https://github.com/AnimaDev24/CalculatorPy/releases" target="_blank">Releases</a>
+    <a href="https://github.com/AnimaDev24/CalculatorPy/issues" target="_blank">Feedback</a>
+  </div>
+</div>
+
+<div class="footer">
+  &copy; Aurora Development &bull; <a href="https://github.com/AnimaDev24/CalculatorPy" target="_blank">Open Source</a>
+</div>
+
+<script>
+  (function() {
+    var vEl = document.getElementById('version');
+    var sEl = document.getElementById('updateStatus');
+    fetch('https://gist.githubusercontent.com/AnimaDev24/c314588b03912eccbf30c80d3cad6c50/raw/gistfile1.txt')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        vEl.textContent = 'v' + d.version;
+        sEl.textContent = 'Up to date';
+        sEl.style.color = '#a6e3a1';
+      })
+      .catch(function() {
+        sEl.textContent = 'Offline';
+        sEl.style.color = '#f38ba8';
+      });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Build
+# Build artifacts
 build/
 dist/
 installer/
@@ -13,3 +13,15 @@ __pycache__/
 .vs/
 .vscode/
 .idea/
+
+# Nicht zum Kern gehoerig
+calculator_config.json
+icon.ico
+icon.png
+requirements.txt
+build_exe.bat
+installer.iss
+create_icon.py
+create_ico.py
+update_checker.py
+update.spec

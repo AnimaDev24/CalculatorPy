@@ -1,0 +1,15 @@
+# Build
+build/
+dist/
+installer/
+*.spec
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vs/
+.vscode/
+.idea/
